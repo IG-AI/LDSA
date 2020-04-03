@@ -19,8 +19,8 @@ public class WordCount {
       StringTokenizer itr = new StringTokenizer(value.toString());
       while (itr.hasMoreTokens()) {
         String token = itr.nextToken();
-        if(Character.isLetter(token.charAt(0))) {
-          word.set(String.valueOf(token.charAt(0)));
+        if(Character.isLetter(Character.toLowerCase(token.charAt(0)))) {
+          word.set(String.valueOf(Character.toLowerCase(token.charAt(0))));
           context.write(word, one);
         }
       }
