@@ -1,36 +1,80 @@
 import json, os
 from pymongo import MongoClient
+from mapper import mapper
+from reducer import reducer
 
 
-def create_client():
-    mongodb_uri = os.getenv('MONGODB_URI')
-    client = MongoClient(mongodb_uri)
-    return client
+class MongoDataBase:
+    def __init__(self, path='/home/g_a/LDSA/A2/mongodb/tweets/files/'):
+        self.tweets_path = path
+        self.client = self.create_client()
+        twitter_db, twitter_collection = self.create_database(self.client)
+        self.twitter_db = twitter_db
+        self.twitter_collection = twitter_collection
 
+    @staticmethod
+    def create_client():
+        mongodb_uri = os.getenv('MONGODB_URI')
+        client = MongoClient(mongodb_uri)
+        return client
 
-def create_database(client):
-    tweet_database = client["database"]
-    tweet_collection = tweet_database["tweet_text"]
-    return (tweet_database, tweet_collection)
+    def create_database(self, client):
+        twitter_db = client["twitter_db"]
+        collection_list = twitter_db.list_collection_names()
+        if "twitter_collection" in collection_list:
+            twitter_collection = twitter_db["twitter_collection"]
+        else:
+            twitter_collection = self.twitter_db.get_collection("twitter_collection")
+        return twitter_db, twitter_collection
 
+    def insert_json_dir(self, path=None, collection=None):
+        path = path or self.tweets_path
+        collection = collection or self.twitter_collection
+        files = os.listdir(path)
+        for file in files:
+            with open(os.path.join(path, file), 'r') as f:
+                print("--------------------------\nLoading file: " + file)
+                for line in f:
+                    if not line.isspace():
+                        data = json.loads(line)
+                        collection.insert_one(data)
 
-def insert_json(path, tweet_collection):
-    files = os.listdir(path)
-    count = 0
-    for file in files:
-        count += 1
-        with open(os.path.join(path, file), 'r') as f:
-            print("--------------------------\nLoading file: " + file)
+        return collection
+
+    def insert_json_file(self, file=None, collection=None):
+        file = file or self.tweets_path
+        collection = collection or self.twitter_collection
+        with open(file, 'r') as f:
+            print("Loading file: " + file)
             for line in f:
                 if not line.isspace():
-                    #print("Loading line: " + line)
                     data = json.loads(line)
-                    tweet_collection.insert_one(data)
+                    collection.insert_one(data)
 
-    return tweet_collection
+        return collection
+
+    def access_text_data(self):
+        twitter_collection = self.twitter_db.get_collection("twitter_collection")
+        tweets_text = twitter_collection.find()
+        return tweets_text
+
+    def mapper(self, input):
+        return mapper(input)
+
+    def reducer(self, input):
+        return reducer(input)
+
+    def delete_collection(self, collection_name="twitter_collection"):
+        self.twitter_db.drop_collection(collection_name)
+
+    #def __del__(self):
+    #   self.delete_collection()
 
 
 if __name__ == '__main__':
-    client = create_client()
-    tweet_database, tweet_collection = create_database(client)
-    tweet_collection = insert_json('/home/g_a/PycharmProjects/MongoDB/tweets/files', tweet_collection)
+    MongoDB = MongoDataBase()
+    MongoDB.insert_json_dir()
+    tweets_text = MongoDB.access_text_data()
+    mapped_data = MongoDB.mapper(tweets_text)
+    reduced_data = MongoDB.reducer(mapped_data)
+    print(reduced_data)
