@@ -5,7 +5,7 @@ from reducer import reducer
 
 
 class MongoDataBase:
-    def __init__(self, path='/home/g_a/LDSA/A2/mongodb/tweets/files/tweets_small.txt'):
+    def __init__(self, path='/home/ubuntu/LDSA/A2/tweet_analysis/input/'):
         self.tweets_path = path
         self.client = self.create_client()
         self.twitter_db = self.client["twitter_db"]
@@ -72,3 +72,5 @@ if __name__ == '__main__':
     mapped_data = MongoDB.mapper(tweets_text)
     reduced_data = MongoDB.reducer(mapped_data)
     print(reduced_data)
+    #MongoDB.delete_collection()
+    #MongoDB.delete_database()
