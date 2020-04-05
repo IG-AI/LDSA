@@ -22,7 +22,7 @@ def mapper(collection):
             # If it finds a occurrence then it writes the result togheter with the amount of occurrence to STDOUT
             for split_word in words_split:
                 if split_word.lower() in pronouns_list:
-                    output.append("%s\t%s" % (split_word.lower(), 1))
+                    output.append("%s" % (split_word.lower()))
 
     return output
 
