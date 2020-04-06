@@ -5,7 +5,7 @@ from pymongo import MongoClient, version
 
 
 class MongoDataBase:
-    def __init__(self, path="/home/g_a/LDSA/A2/tweet_analysis/tweets/files/"):
+    def __init__(self, path="/home/ubuntu/LDSA/A2/tweet_analysis/input/"):
         self.tweets_path = path
         self.client = self.create_client()
         self.twitter_db = self.client["twitter_db"]
@@ -109,6 +109,3 @@ if __name__ == '__main__':
     #tweets_text = MongoDB.access_text_data()
     #MongoDB.delete_collection()
     #MongoDB.delete_database()
-
-    #if (pronouns_list.some(word => words[i].includes(word)))
-    #(pronouns_list.some(word => words[i].includes(word))

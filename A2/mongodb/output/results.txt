@@ -1,0 +1,8 @@
+MongoDb version: 3.10.1
+{'_id': 'den', 'value': 1447670.0}
+{'_id': 'denna', 'value': 25515.0}
+{'_id': 'denne', 'value': 4506.0}
+{'_id': 'det', 'value': 578650.0}
+{'_id': 'han', 'value': 841168.0}
+{'_id': 'hen', 'value': 37833.0}
+{'_id': 'hon', 'value': 394582.0}
