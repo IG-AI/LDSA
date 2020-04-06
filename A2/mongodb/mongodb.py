@@ -5,7 +5,7 @@ from pymongo import MongoClient, version
 
 
 class MongoDataBase:
-    def __init__(self, path="/home/ubuntu/LDSA/A2/tweet_analysis/input/"):
+    def __init__(self, path="/home/g_a/LDSA/A2/tweet_analysis/tweets/files/"):
         self.tweets_path = path
         self.client = self.create_client()
         self.twitter_db = self.client["twitter_db"]
@@ -33,8 +33,8 @@ class MongoDataBase:
                         temp_data.append(data["text"])
 
         temp_data = set(temp_data)
-        for i in range(len(temp_data)):
-            collection.insert_one({"text" : list(temp_data)[i]})
+        for tweet in temp_data:
+            collection.insert_one({"text" : tweet})
 
         return collection
 
@@ -50,8 +50,8 @@ class MongoDataBase:
                     temp_data.append(data["text"])
 
         temp_data = set(temp_data)
-        for i in range(len(temp_data)):
-            collection.insert_one({"text" : list(temp_data)[i]})
+        for tweet in temp_data:
+            collection.insert_one({"text" : tweet})
 
         return collection
 
@@ -67,9 +67,9 @@ class MongoDataBase:
                 var text = this.text
                 const pronouns_list = ["han", "hon", "denna", "det", "denne", "den", "hen"]
                 if (text) {
-                    words = text.toLowerCase().split(/[^A-Öa-ö]/);
+                    words = text.toLowerCase().split(/[^\u0041-\u005A\u0061-\u007A\u00C4-\u00C5\u00D6\u00E4-\u00E5\u00F6]/)
                     for(var i = words.length - 1; i >= 0; i--) {
-                        if (pronouns_list.some(word => words[i].includes(word))) {
+                        if (pronouns_list.includes(words[i])) {
                             emit(words[i], 1);
                         }
                     }
@@ -90,9 +90,6 @@ class MongoDataBase:
 
         return self.twitter_collection.map_reduce(mapper, reducer, "pronouns")
 
-    def reducer(self, input):
-        return reducer(input)
-
     def delete_collection(self, collection_name="twitter_collection"):
         self.twitter_db.drop_collection(collection_name)
 
@@ -104,7 +101,7 @@ class MongoDataBase:
 
 
 if __name__ == '__main__':
-    print(version)
+    print("MongoDb version: " + version)
     MongoDB = MongoDataBase()
     result = MongoDB.map_reduce()
     for doc in result.find():
@@ -112,3 +109,6 @@ if __name__ == '__main__':
     #tweets_text = MongoDB.access_text_data()
     #MongoDB.delete_collection()
     #MongoDB.delete_database()
+
+    #if (pronouns_list.some(word => words[i].includes(word)))
+    #(pronouns_list.some(word => words[i].includes(word))
