@@ -5,6 +5,7 @@ import sys, re, json
 
 data = []
 for line in sys.stdin:
+    print("HEJ")    
     if not line.isspace():
         data = json.loads(line)
         data.append(data["text"])
