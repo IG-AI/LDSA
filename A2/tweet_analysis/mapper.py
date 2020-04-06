@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
 """mapper.py"""
 
-import sys, re, json;
+import sys, re, json
 
-twitter_data = []
+data = []
 for line in sys.stdin:
     if not line.isspace():
         data = json.loads(line)
-        twitter_data.append(data["text"])
+        data.append(data["text"])
+
+    twitter_data = {}
+
+    for doc in data:
+        name = doc
+        if name not in twitter_data:
+            twitter_data[name] = doc
 
 # input comes from STDIN (standard input)
 for line in twitter_data:
