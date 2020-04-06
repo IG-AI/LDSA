@@ -2,19 +2,17 @@ import json, os
 
 from bson import Code
 from pymongo import MongoClient, version
-from mapper import mapper
-from reducer import reducer
 
 
 class MongoDataBase:
-    def __init__(self, path='/home/g_a/LDSA/A2/tweet_analysis/tweets/files/tweets_small.txt'):
+    def __init__(self, path="/home/ubuntu/LDSA/A2/tweet_analysis/input/"):
         self.tweets_path = path
         self.client = self.create_client()
         self.twitter_db = self.client["twitter_db"]
         self.twitter_collection = self.twitter_db["twitter_collection"]
         collection_list = self.twitter_db.list_collection_names()
         if "twitter_collection" not in collection_list:
-            self.insert_json_file()
+            self.insert_json_dir()
 
     @staticmethod
     def create_client():
@@ -111,6 +109,6 @@ if __name__ == '__main__':
     result = MongoDB.map_reduce()
     for doc in result.find():
         print(doc)
-    tweets_text = MongoDB.access_text_data()
+    #tweets_text = MongoDB.access_text_data()
     #MongoDB.delete_collection()
     #MongoDB.delete_database()
