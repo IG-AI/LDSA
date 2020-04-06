@@ -3,29 +3,25 @@
 
 import sys, re, json
 
-data = []
+temp_data = []
 for line in sys.stdin:
     if not line.isspace():
         data = json.loads(line)
-        data.append(data["text"])
+        temp_data.append(data["text"])
 
-    twitter_data = {}
-
-    for doc in data:
-        name = doc
-        if name not in twitter_data:
-            twitter_data[name] = doc
+temp_data = set(temp_data)
 
 # input comes from STDIN (standard input)
-for line in twitter_data:
+ # Creates a regex that looks for everything that's not a swedish letter.
+regex = re.compile('[^a-öA-Ö]')
+pronouns_list = ["han", "hon", "denna", "det", "denne", "den", "hen"]
+for line in temp_data:
     # remove leading and trailing whitespace
     line = line.strip()
     # split the line into words
     words = line.split()
-    # Creates a regex that looks for everything that's not a swedish letter.
-    regex = re.compile('[^a-öA-Ö]')
-    # The sets a list with pronouns that should be search for. 
-    pronouns_list = ["han", "hon", "denna", "det", "denne", "den", "hen"]
+   
+    # The sets a list with pronouns that should be search for.
     for word in words:
         # Splits the word into a list of words on the occurrence of the regex
         words_split = re.split(regex, word)
