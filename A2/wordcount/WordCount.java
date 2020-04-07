@@ -9,6 +9,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+// WordCount class that inputs
 public class WordCount {
   public static class TokenizerMapper
        extends Mapper<Object, Text, Text, IntWritable>{

@@ -3,7 +3,12 @@ import json, os
 from bson import Code
 from pymongo import MongoClient, version
 
-
+"""
+Makes the MongoDB client with localhost as address and 27017 as port, adds a database (twitter_db) and collection 
+(twitter_collection). Chechs if that collection exist in the database and if not than it loads json-files from the path 
+(default="/home/ubuntu/LDSA/A2/tweet_analysis/input/"). Everything except the text attribute removed and than 
+duplications is removed. This is then loaded to the collection in the database on th client.  
+"""
 class MongoDataBase:
     def __init__(self, path="/home/ubuntu/LDSA/A2/tweet_analysis/input/"):
         self.tweets_path = path
@@ -34,7 +39,7 @@ class MongoDataBase:
 
         temp_data = set(temp_data)
         for tweet in temp_data:
-            collection.insert_one({"text" : tweet})
+            collection.insert_one({"text": tweet})
 
         return collection
 
@@ -51,7 +56,7 @@ class MongoDataBase:
 
         temp_data = set(temp_data)
         for tweet in temp_data:
-            collection.insert_one({"text" : tweet})
+            collection.insert_one({"text": tweet})
 
         return collection
 
@@ -60,6 +65,18 @@ class MongoDataBase:
         tweets_text = twitter_collection.find()
         return tweets_text
 
+    """
+    Makes two bson Code objects, one containing a map function and one containing a reduce function in javascript. 
+    
+    The map function (mapper) takes all text in the called collection (twitter_collection). If this is not empty then it
+    splits the text into words based on a regex that excludes everything except letter a-ö and A-Ö. Then it loops 
+    through the list of split words and checks if they are any of the presat pronouns (han, hon, denna, det, denne, den 
+    and hen). If it is then it emits that word with the count of one to the reducer.
+    
+    The reducer listens for emits from the mapper and returns all occurrences of a given word. 
+    
+    Then a dict of unique words from the mapper and the sum from the reducer is returned.
+    """
     def map_reduce(self):
         mapper = Code(
             """
@@ -101,11 +118,10 @@ class MongoDataBase:
 
 
 if __name__ == '__main__':
-    print("MongoDb version: " + version)
+    print("MongoDB version: " + version)
     MongoDB = MongoDataBase()
     result = MongoDB.map_reduce()
     for doc in result.find():
         print(doc)
-    #tweets_text = MongoDB.access_text_data()
-    #MongoDB.delete_collection()
-    #MongoDB.delete_database()
+    # MongoDB.delete_collection()
+    # MongoDB.delete_database()
