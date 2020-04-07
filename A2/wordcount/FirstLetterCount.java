@@ -9,7 +9,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-public class WordCount {
+public class FirstLetterCount {
   public static class TokenizerMapper
        extends Mapper<Object, Text, Text, IntWritable>{
     private final static IntWritable one = new IntWritable(1);
@@ -17,10 +17,6 @@ public class WordCount {
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
       StringTokenizer itr = new StringTokenizer(value.toString());
-      /*
-      Iterate through each token in the StringTokenizer itr. Puts the next token from it as a string than checks if the
-      lower case first character in the string is a letter. If it is than it adds it to context together with 1.
-      */
       while (itr.hasMoreTokens()) {
         String token = itr.nextToken();
         if(Character.isLetter(Character.toLowerCase(token.charAt(0)))) {
@@ -47,7 +43,7 @@ public class WordCount {
   public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
     Job job = Job.getInstance(conf, "word count");
-    job.setJarByClass(WordCount.class);
+    job.setJarByClass(FirstLetterCount.class);
     job.setMapperClass(TokenizerMapper.class);
     job.setCombinerClass(IntSumReducer.class);
     job.setReducerClass(IntSumReducer.class);
