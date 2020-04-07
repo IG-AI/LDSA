@@ -3,9 +3,7 @@ import json, os
 from bson import Code
 from pymongo import MongoClient, version
 
-"""
-  
-"""
+
 class MongoDataBase:
     def __init__(self, path="/home/ubuntu/LDSA/A2/tweet_analysis/input/"):
         """
