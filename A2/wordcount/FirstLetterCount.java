@@ -17,6 +17,10 @@ public class WordCount {
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
       StringTokenizer itr = new StringTokenizer(value.toString());
+      /*
+      Iterate through each token in the StringTokenizer itr. Puts the next token from it as a string than checks if the
+      lower case first character in the string is a letter. If it is than it adds it to context together with 1.
+      */
       while (itr.hasMoreTokens()) {
         String token = itr.nextToken();
         if(Character.isLetter(Character.toLowerCase(token.charAt(0)))) {
