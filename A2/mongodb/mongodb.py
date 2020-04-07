@@ -143,6 +143,17 @@ class MongoDataBase:
 
         return self.twitter_collection.map_reduce(mapper, reducer, "pronouns")
 
+    def print_map_reduce(self):
+        """
+        Print and returns the result from self.map_reduce().
+        :return: dict
+            The result from self.map_reduce().
+        """
+        result = self.map_reduce()
+        for doc in result.find():
+            print(doc)
+        return result
+
     def delete_collection(self, collection_name="twitter_collection"):
         """
         Remove provide collection (default = twitter_collection).
@@ -171,8 +182,6 @@ class MongoDataBase:
 if __name__ == '__main__':
     print("MongoDB version: " + version)
     MongoDB = MongoDataBase()
-    result = MongoDB.map_reduce()
-    for doc in result.find():
-        print(doc)
+    MongoDB.print_map_reduce()
     # MongoDB.delete_collection()
     # MongoDB.delete_database()
