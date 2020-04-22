@@ -1,3 +1,4 @@
 [submodule "A3/jupyters-public"]
 	path = A3/jupyters-public
+	active = false
 	url = https://github.com/benblamey/jupyters-public.git
